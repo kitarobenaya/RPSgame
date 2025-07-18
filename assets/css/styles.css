@@ -143,3 +143,25 @@ main section.player-section div.img-player-wrap img.player-image:hover {
   cursor: pointer;
   transform: scale(1.05);
 }
+
+@media screen and (max-width: 468px) {
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  img {
+    width: 100px;
+    height: 100px;
+  }
+
+  main section.computer-section {
+    width: 100%;
+    height: 300px;
+  }
+
+  main section.player-section {
+    width: 100%;
+    height: 300px;
+  }
+}
