@@ -2,34 +2,64 @@ const player_Images = document.querySelectorAll(".player-image");
 const imgComp = document.querySelector(".computer-image");
 const compCapt = document.querySelector(".computer-caption-image");
 const info = document.querySelector("section.info");
+const bgInfo = document.querySelector("div.bg-info");
 const scorePlayer = document.querySelector("div.score.player");
 const scoreComp = document.querySelector("div.score.computer");
 
+function htmlString(gamNamComp, gamNamPl) {
+  return `
+  <div class="img-player-wrap showcomputer">
+  <figcaption>computer</figcaption>
+    <img
+      src="assets/images/${gamNamComp}.png"
+      alt="gambar ${gamNamComp}"
+      class="player-image"
+      aria-label="gambar ${gamNamComp}"
+    />
+    <figcaption aria-label="${gamNamComp} adalah pilihan computer">${gamNamComp}</figcaption>
+  </div>
+
+  <span>VS</span>
+
+  <div class="img-player-wrap showplayer">
+  <figcaption>kamu</figcaption>
+    <img
+      src="assets/images/${gamNamPl}.png"
+      alt="gambar ${gamNamPl}"
+      class="player-image"
+      aria-label="gambar ${gamNamPl}"
+    />
+    <figcaption aria-label="${gamNamPl} adalah pilihan kamu">${gamNamPl}</figcaption>
+  </div>
+</section>
+  `;
+}
+
 function getComputerChoice() {
-  const choice = ["gajah", "orang", "semut"];
+  const choice = ["batu", "kertas", "gunting"];
   const randomChoice = Math.round(Math.random() * (choice.length - 1));
   return choice[randomChoice];
 }
 
 function getTheWinner(playerChoice, computerChoice) {
   if (playerChoice == computerChoice) return "Seri!";
-  if (playerChoice == "gajah")
-    return computerChoice == "orang" ? "Menang!" : "Kalah!";
-  if (playerChoice == "semut")
-    return computerChoice == "gajah" ? "Menang!" : "Kalah!";
-  if (playerChoice == "orang")
-    return computerChoice == "semut" ? "Menang!" : "Kalah!";
+  if (playerChoice == "batu")
+    return computerChoice == "gunting" ? "Menang!" : "Kalah!";
+  if (playerChoice == "kertas")
+    return computerChoice == "batu" ? "Menang!" : "Kalah!";
+  if (playerChoice == "gunting")
+    return computerChoice == "kertas" ? "Menang!" : "Kalah!";
 }
 
 function imageRoll() {
-  const gambar = ["gajah", "orang", "semut"];
+  const gambar = ["batu", "kertas", "gunting"];
   let i = 0;
   const interval = setInterval(() => {
     imgComp.setAttribute("src", `assets/images/${gambar[i++]}.png`);
-    if(i == gambar.length) return i = 0;
+    if (i == gambar.length) return (i = 0);
     setTimeout(() => {
       clearInterval(interval);
-    }, 900)
+    }, 900);
   }, 100);
 }
 
@@ -42,12 +72,64 @@ player_Images.forEach((img) => {
     setTimeout(() => {
       imgComp.setAttribute("src", `assets/images/${computerChoice}.png`);
       compCapt.innerHTML = computerChoice;
-      info.innerHTML = getTheWinner(playerChoice, computerChoice);
-      if (info.innerHTML == "Menang!") {
-        scorePlayer.innerHTML = parseInt(scorePlayer.innerHTML) + 1;
-      } else if (info.innerHTML == "Kalah!") {
-        scoreComp.innerHTML = parseInt(scoreComp.innerHTML) + 1;
-      }
-    }, 1000)
+
+      // animation start
+      setTimeout(() => {
+        info.classList.add("showinfo");
+        bgInfo.style.opacity = "1";
+        bgInfo.style.zIndex = "2";
+
+        setTimeout(() => {
+          info.innerHTML = htmlString(computerChoice, playerChoice);
+        }, 500);
+
+        setTimeout(() => {
+          const imgPlayerWrap = document.querySelectorAll(
+            "section.info .img-player-wrap"
+          );
+          const spanEl = document.querySelector("section.info span");
+          imgPlayerWrap[0].classList.remove("showcomputer");
+          imgPlayerWrap[1].classList.remove("showplayer");
+          spanEl.classList.add("hidespan");
+          imgPlayerWrap[0].classList.add("hidecomputer");
+          imgPlayerWrap[1].classList.add("hideplayer");
+        }, 2500);
+
+        setTimeout(() => {
+          const spanEl = document.querySelector("section.info span");
+          spanEl.classList.remove("hidespan");
+          spanEl.classList.add("showspan");
+          spanEl.innerHTML =
+            "Kamu " + getTheWinner(playerChoice, computerChoice);
+        }, 3100);
+
+        setTimeout(() => {
+          const spanEl = document.querySelector("section.info span");
+          if (spanEl.innerHTML == "Kamu Menang!") {
+            scorePlayer.innerHTML = parseInt(scorePlayer.innerHTML) + 1;
+          } else if (spanEl.innerHTML == "Kamu Kalah!") {
+            scoreComp.innerHTML = parseInt(scoreComp.innerHTML) + 1;
+          }
+
+          const imgPlayerWrap = document.querySelectorAll(
+            "section.info .img-player-wrap"
+          );
+          imgPlayerWrap[0].classList.remove("hidecomputer");
+          imgPlayerWrap[1].classList.remove("hideplayer");
+
+          info.classList.remove("showinfo");
+
+          info.classList.add("hideinfo");
+          bgInfo.style.opacity = "0";
+          bgInfo.style.zIndex = "0";
+          info.innerHTML = "<span>VS</span>";
+        }, 5100);
+
+        setTimeout(() => {
+          info.classList.remove("hideinfo");
+        }, 5550);
+      }, 200);
+      // animation end
+    }, 1000);
   });
 });
