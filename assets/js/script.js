@@ -6,6 +6,7 @@ const bgInfo = document.querySelector("div.bg-info");
 const scorePlayer = document.querySelector("div.score.player");
 const scoreComp = document.querySelector("div.score.computer");
 let lastUserChoice = null;
+let boolflag = true;
 
 function htmlString(gamNamComp, gamNamPl) {
   return `
@@ -37,9 +38,11 @@ function htmlString(gamNamComp, gamNamPl) {
 }
 
 function getComputerChoice() {
-  if (!lastUserChoice) {
+  const random = Math.random();
+
+  if (!lastUserChoice || random < 0.3) {
     const choices = ["batu", "gunting", "kertas"];
-    return choices[Math.floor(Math.random() * choices.length)];
+    return choices[Math.floor(random * choices.length)];
   }
 
   if (lastUserChoice === "batu") return "kertas";
@@ -71,71 +74,76 @@ function imageRoll() {
 
 player_Images.forEach((img) => {
   img.addEventListener("click", function () {
-    const playerChoice = this.dataset.choice;
-    imageRoll();
-    const computerChoice = getComputerChoice();
-    console.log(computerChoice);
-    setTimeout(() => {
-      imgComp.setAttribute("src", `assets/images/${computerChoice}.png`);
-      compCapt.innerHTML = computerChoice;
-
-      // animation start
+    if (boolflag == true) {
+      boolflag = false;
+      const playerChoice = this.dataset.choice;
+      imageRoll();
+      const computerChoice = getComputerChoice();
+      console.log(computerChoice);
       setTimeout(() => {
-        info.classList.add("showinfo");
-        bgInfo.style.opacity = "1";
-        bgInfo.style.zIndex = "2";
+        imgComp.setAttribute("src", `assets/images/${computerChoice}.png`);
+        compCapt.innerHTML = computerChoice;
+        lastUserChoice = playerChoice;
 
+        // animation start
         setTimeout(() => {
-          info.innerHTML = htmlString(computerChoice, playerChoice);
-        }, 500);
+          info.classList.add("showinfo");
+          bgInfo.style.opacity = "1";
+          bgInfo.style.zIndex = "2";
 
-        setTimeout(() => {
-          const imgPlayerWrap = document.querySelectorAll(
-            "section.info .img-player-wrap"
-          );
-          const spanEl = document.querySelector("section.info span");
-          imgPlayerWrap[0].classList.remove("showcomputer");
-          imgPlayerWrap[1].classList.remove("showplayer");
-          spanEl.classList.add("hidespan");
-          imgPlayerWrap[0].classList.add("hidecomputer");
-          imgPlayerWrap[1].classList.add("hideplayer");
-        }, 2500);
+          setTimeout(() => {
+            info.innerHTML = htmlString(computerChoice, playerChoice);
+          }, 500);
 
-        setTimeout(() => {
-          const spanEl = document.querySelector("section.info span");
-          spanEl.classList.remove("hidespan");
-          spanEl.classList.add("showspan");
-          spanEl.innerHTML =
-            "Kamu " + getTheWinner(playerChoice, computerChoice);
-        }, 3100);
+          setTimeout(() => {
+            const imgPlayerWrap = document.querySelectorAll(
+              "section.info .img-player-wrap"
+            );
+            const spanEl = document.querySelector("section.info span");
+            imgPlayerWrap[0].classList.remove("showcomputer");
+            imgPlayerWrap[1].classList.remove("showplayer");
+            spanEl.classList.add("hidespan");
+            imgPlayerWrap[0].classList.add("hidecomputer");
+            imgPlayerWrap[1].classList.add("hideplayer");
+          }, 2500);
 
-        setTimeout(() => {
-          const spanEl = document.querySelector("section.info span");
-          if (spanEl.innerHTML == "Kamu Menang!") {
-            scorePlayer.innerHTML = parseInt(scorePlayer.innerHTML) + 1;
-          } else if (spanEl.innerHTML == "Kamu Kalah!") {
-            scoreComp.innerHTML = parseInt(scoreComp.innerHTML) + 1;
-          }
+          setTimeout(() => {
+            const spanEl = document.querySelector("section.info span");
+            spanEl.classList.remove("hidespan");
+            spanEl.classList.add("showspan");
+            spanEl.innerHTML =
+              "Kamu " + getTheWinner(playerChoice, computerChoice);
+          }, 3100);
 
-          const imgPlayerWrap = document.querySelectorAll(
-            "section.info .img-player-wrap"
-          );
-          imgPlayerWrap[0].classList.remove("hidecomputer");
-          imgPlayerWrap[1].classList.remove("hideplayer");
+          setTimeout(() => {
+            const spanEl = document.querySelector("section.info span");
+            if (spanEl.innerHTML == "Kamu Menang!") {
+              scorePlayer.innerHTML = parseInt(scorePlayer.innerHTML) + 1;
+            } else if (spanEl.innerHTML == "Kamu Kalah!") {
+              scoreComp.innerHTML = parseInt(scoreComp.innerHTML) + 1;
+            }
 
-          info.classList.remove("showinfo");
+            const imgPlayerWrap = document.querySelectorAll(
+              "section.info .img-player-wrap"
+            );
+            imgPlayerWrap[0].classList.remove("hidecomputer");
+            imgPlayerWrap[1].classList.remove("hideplayer");
 
-          info.classList.add("hideinfo");
-          bgInfo.style.opacity = "0";
-          bgInfo.style.zIndex = "0";
-          info.innerHTML = "<span>VS</span>";
-        }, 5100);
+            info.classList.remove("showinfo");
 
-        setTimeout(() => {
-          info.classList.remove("hideinfo");
-        }, 5550);
-      }, 200);
-      // animation end
-    }, 1000);
+            info.classList.add("hideinfo");
+            bgInfo.style.opacity = "0";
+            bgInfo.style.zIndex = "0";
+            info.innerHTML = "<span>VS</span>";
+          }, 5100);
+
+          setTimeout(() => {
+            info.classList.remove("hideinfo");
+            boolflag = true;
+          }, 5550);
+        }, 200);
+        // animation end
+      }, 1000);
+    }
   });
 });
