@@ -6,6 +6,8 @@ const bgInfo = document.querySelector("div.bg-info");
 const scorePlayer = document.querySelector("div.score.player");
 const scoreComp = document.querySelector("div.score.computer");
 let lastUserChoice = null;
+let playerHistory = [];
+const maxHistory = 5;
 let boolflag = true;
 
 function htmlString(gamNamComp, gamNamPl) {
@@ -38,16 +40,26 @@ function htmlString(gamNamComp, gamNamPl) {
 }
 
 function getComputerChoice() {
-  const random = Math.random();
+  const choices = ["batu", "gunting", "kertas"];
 
-  if (!lastUserChoice || random < 0.3) {
-    const choices = ["batu", "gunting", "kertas"];
-    return choices[Math.floor(random * choices.length)];
+  // Kalau belum cukup data, tetap random
+  if (playerHistory.length < maxHistory) {
+    return choices[Math.floor(Math.random() * choices.length)];
   }
 
-  if (lastUserChoice === "batu") return "kertas";
-  if (lastUserChoice === "gunting") return "batu";
-  if (lastUserChoice === "kertas") return "gunting";
+  // Hitung frekuensi pilihan player
+  const freq = { batu: 0, gunting: 0, kertas: 0 };
+  playerHistory.forEach((choice) => freq[choice]++);
+
+  // Cari pilihan player yang paling sering
+  let mostUsed = "batu";
+  if (freq["gunting"] > freq[mostUsed]) mostUsed = "gunting";
+  if (freq["kertas"] > freq[mostUsed]) mostUsed = "kertas";
+
+  // Counter dari yang paling sering
+  if (mostUsed === "batu") return "kertas";
+  if (mostUsed === "gunting") return "batu";
+  return "gunting";
 }
 
 function getTheWinner(playerChoice, computerChoice) {
@@ -83,7 +95,12 @@ player_Images.forEach((img) => {
       setTimeout(() => {
         imgComp.setAttribute("src", `assets/images/${computerChoice}.png`);
         compCapt.innerHTML = computerChoice;
+
         lastUserChoice = playerChoice;
+        playerHistory.push(playerChoice);
+        if (playerHistory.length > maxHistory) {
+          playerHistory.shift(); // buang data lama kalau lebih dari max
+        }
 
         // animation start
         setTimeout(() => {
