@@ -5,6 +5,7 @@ const info = document.querySelector("section.info");
 const bgInfo = document.querySelector("div.bg-info");
 const scorePlayer = document.querySelector("div.score.player");
 const scoreComp = document.querySelector("div.score.computer");
+let lastUserChoice = null;
 
 function htmlString(gamNamComp, gamNamPl) {
   return `
@@ -36,9 +37,14 @@ function htmlString(gamNamComp, gamNamPl) {
 }
 
 function getComputerChoice() {
-  const choice = ["batu", "kertas", "gunting"];
-  const randomChoice = Math.round(Math.random() * (choice.length - 1));
-  return choice[randomChoice];
+  if (!lastUserChoice) {
+    const choices = ["batu", "gunting", "kertas"];
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
+
+  if (lastUserChoice === "batu") return "kertas";
+  if (lastUserChoice === "gunting") return "batu";
+  if (lastUserChoice === "kertas") return "gunting";
 }
 
 function getTheWinner(playerChoice, computerChoice) {

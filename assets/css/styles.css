@@ -179,7 +179,7 @@ main section.info span.hidespan {
 main section.info span {
   width: auto;
   height: auto;
-  font-size: 3rem;
+  font-size: 2.3rem;
   font-family: "Jost";
   font-weight: 600;
 }
@@ -254,7 +254,7 @@ main section.player-section div.img-player-wrap img.player-image:hover {
   }
 
   figcaption {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   main section.computer-section {
@@ -288,7 +288,7 @@ main section.player-section div.img-player-wrap img.player-image:hover {
   }
 
   main section.info span {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     position: absolute;
   }
 
