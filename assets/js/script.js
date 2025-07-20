@@ -99,7 +99,7 @@ player_Images.forEach((img) => {
         lastUserChoice = playerChoice;
         playerHistory.push(playerChoice);
         if (playerHistory.length > maxHistory) {
-          playerHistory.shift(); // buang data lama kalau lebih dari max
+          playerHistory.shift();
         }
 
         // animation start
