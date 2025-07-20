@@ -5,7 +5,7 @@ const info = document.querySelector("section.info");
 const bgInfo = document.querySelector("div.bg-info");
 const scorePlayer = document.querySelector("div.score.player");
 const scoreComp = document.querySelector("div.score.computer");
-let lastUserChoice = null;
+
 let playerHistory = [];
 const maxHistory = 5;
 let boolflag = true;
@@ -96,7 +96,6 @@ player_Images.forEach((img) => {
         imgComp.setAttribute("src", `assets/images/${computerChoice}.png`);
         compCapt.innerHTML = computerChoice;
 
-        lastUserChoice = playerChoice;
         playerHistory.push(playerChoice);
         if (playerHistory.length > maxHistory) {
           playerHistory.shift();
