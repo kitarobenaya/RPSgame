@@ -18,7 +18,7 @@ Simple and interactive Rock-Paper-Scissors game built with HTML, CSS, and JavaSc
 [Click to open the app](https://kitarobenaya.github.io/RPSgame/)
 
 ## 💡 How to Play
-1. Open `index.html` in your browser.
+1. Open `the app` in your browser.
 2. Click Rock, Paper, or Scissors.
 3. See result and score updates.
 4. Play again until reaching predefined rounds or reset.
